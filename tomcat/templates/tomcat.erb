@@ -8,6 +8,10 @@ PATH=$JAVA_HOME/bin:$PATH
 export PATH
 CATALINA_HOME=<%= scope.lookupvar('tomcat::web_home') %>
 
+tomcat_pid() {
+  echo `ps aux | grep org.apache.catalina.startup.Bootstrap | grep -v grep | awk '{ print $2 }'`
+}
+
 case $1 in
 start)
 sh $CATALINA_HOME/bin/startup.sh
@@ -19,6 +23,16 @@ restart)
 sh $CATALINA_HOME/bin/shutdown.sh
 sh $CATALINA_HOME/bin/startup.sh
 ;;
+status)
+  pid=$(tomcat_pid)
+  if [ -n "$pid" ]
+  then
+    echo "Tomcat is running with pid: $pid"
+  else
+    echo "Tomcat is not running"
+    exit 1
+  fi
+;; 
 esac
 exit 0
 

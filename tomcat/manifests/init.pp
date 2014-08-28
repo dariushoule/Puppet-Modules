@@ -205,7 +205,10 @@
 		} 
 	}
 
-		
+  service { "tomcat":
+    ensure  => running,
+    require => File['/etc/init.d/tomcat'],
+  }
 }
 		
 		
